@@ -29,8 +29,8 @@ class RandDungGen(object):
         self._readInputFile(inpFileName)
 
         self.dungeonInfo = {}
-        self.dungeonInfo["rooms"] = {}
-        self.dungeonInfo["doors"] = {}
+        self.dungeonInfo["rooms"] = []
+        self.dungeonInfo["doors"] = []
         self.dungeonInfo["width"] = self.dungWidth
         self.dungeonInfo["height"] = self.dungHeight
 
@@ -79,8 +79,8 @@ class RandDungGen(object):
             for y in xrange(anchorY, roomH + anchorY):
                 self.dungeon.grid[y][x] = GridEnum.FLOOR
 
-        self.dungeonInfo["rooms"][roomNum] = {"x1":anchorX, "y1":anchorY, 
-                                "x2":roomW + anchorX, "y2":roomH + anchorY}
+        self.dungeonInfo["rooms"].append({"x1":anchorX, "y1":anchorY, 
+                                "x2":roomW + anchorX, "y2":roomH + anchorY})
 
         # wall info format (loc. in room, unchanging x/y coor, 
         #               changing x/y coor, width/height)
@@ -169,8 +169,8 @@ class RandDungGen(object):
                 for y in xrange(y1, y2):
                     self.dungeon.grid[y][x] = GridEnum.FLOOR
 
-            self.dungeonInfo["rooms"][roomNum] = {"x1":x1, "y1":y1, 
-                                            "x2":x2, "y2":y2}
+            self.dungeonInfo["rooms"].append({"x1":x1, "y1":y1, 
+                                            "x2":x2, "y2":y2})
 
             # if successful, push room onto next gen root queue
             wallList.append(('l', x1 - 1, y1, roomH))
@@ -195,16 +195,16 @@ class RandDungGen(object):
                 passY1 = max(cCor, y1)
                 passY2 = min(cCor + dim, y2)
                 doorWidth = min(doorWidth, passY2 - passY1)
-                self.dungeonInfo["doors"][roomNum] = \
-                        {"dir":'v', "x":passX1, "y":passY1, "w":doorWidth}
+                self.dungeonInfo["doors"].append( \
+                        {"dir":'v', "x":passX1, "y":passY1, "w":doorWidth})
             elif direction == 'u' or direction == 'd':
                 passY1 = uncCor
                 passY2 = uncCor + 1
                 passX1 = max(cCor, x1)
                 passX2 = min(cCor + dim, x2)
                 doorWidth = min(doorWidth, passX2 - passX1)
-                self.dungeonInfo["doors"][roomNum] = \
-                        {"dir":'h', "x":passX1, "y":passY1, "w":doorWidth}
+                self.dungeonInfo["doors"].append( \
+                        {"dir":'h', "x":passX1, "y":passY1, "w":doorWidth})
 
             for x in xrange(passX1, passX2):
                 for y in xrange(passY1, passY2):
@@ -218,12 +218,11 @@ class RandDungGen(object):
     def outputDungeon(self):
         f = open("dungeonInfo.json", 'w')
         f.write(str(json.dumps(self.dungeonInfo)))
-        #for y in xrange(0, self.dungeon.height):
-            #s = ""
-            #for x in xrange(0, self.dungeon.width):
-                #s += str(self.dungeon.grid[y][x]) + " "
-            #s = s.strip() + "\n"
-            #f.write(s)
+        for y in xrange(0, self.dungeon.height):
+            s = ""
+            for x in xrange(0, self.dungeon.width):
+                s += str(self.dungeon.grid[y][x]) + " "
+            print s.strip() 
             
 if __name__ == "__main__":
     randDung = RandDungGen("dungeonParamText")
