@@ -1,0 +1,11 @@
+dungWidth 20
+dungHeight 20
+minRoomNum 10
+maxRoomNum 15
+retryCount 10
+minRoomWidth 2
+maxRoomWidth 5
+minRoomHeight 2
+maxRoomHeight 5
+minDoorWidth 1
+maxDoorWidth 2
